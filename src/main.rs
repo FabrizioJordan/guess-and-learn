@@ -1,6 +1,10 @@
 use std::io;
 
 fn main() {
+    primer_adivinanza()
+}
+
+fn primer_adivinanza(){
     println!("Adivina el número!");
 
     println!("Por favor, escríbe el número: ");
