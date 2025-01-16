@@ -66,9 +66,45 @@ Explicación del código (sólo las partes nuevas, no por ejemplo los ```println
 
 Esta explicación finalizó.
 
-Este código es parte de la función ```primer_adivinanza```.
+
+## Segundo juego, con números random
+
+Este código va a ser parte de la función ```primer_adivinanza```.
 
 Ahora vamos a implementar un número aleatorio en una nueva función para que la adivinanza sea realmente difícil, vamos a tener que adivinar un número del 1 al 100.
+
+Rust realmente no tiene un método base para aleatoriedad, pero esto se resuelve con una crate.
+
+Una crate es algo que siempre usamos en Rust todos nosotros, es algo así como el archivo o los archivos que van con tu código [¹](#bib_crate1) , o dicho de otra forma, es un paquete que puede contener el código fuente [²](#bib_crate2).    
+
+Específicamente lo que estamos construyendo es un crate binario, osea un ejecutable, mientras que el crate que se suele usar para crear aleatoriedad se llama ```rand```, el cual es un crate de tipo librería, osea que no se puede ejecutar directamente, sino que se usa en otros programas.
+
+Si conoces JavaScript y cómo ```packages.json``` es el archivo para organizar las dependencias de nuestro proyecto, entonces te servirá para entender cómo en Rust se usa el archivo ```Cargo.toml```.
+
+Ahora hay que añadir el crate ```rand``` cómo dependencia dentro de nuestro archivo de dependencias.
+
+Nuestro archivo ahora va a contener no solo información sobre nuestro paquete sino también sobre nuestras dependencias.
+
+Así se tiene que ver la zona de dependencias:
+
+```
+[dependencies]
+rand = "0.8.5"
+```
+
+Esto es básicamente:
+
+```crate/dependencia = "versión del paquete"```
+
+Otra forma de añadir ```rand``` cómo dependencia es ejecutando el siguiente comando:
+```cargo add rand```
+
+Es importante mantener estas versiones al ejecutar/usar estos ejemplos, debido que a mayores versiones, más cambios pueden existir, lo que podría romper alguna parte del código existente.
+
+Una forma de tener las correciones de errores pero sin romper el código es no usando ```0.8.5``` sino ```^0.8.5```, si existe una versión con correción de errores automáticamente se actualiza el paquete, pero si existe una versión que modifica el paquete con features o cosas por el estilo (cómo una versión ```0.9.0``` en adelante) entonces el paquete no se actualiza.
+
+Para saber más sobre todo esto, deberías leerlo en el libre gratuito y ofícial de Rust: [Aquí](https://book.rustlang-es.org/ch02-00-guessing-game-tutorial#usando-un-crate-para-obtener-más-funcionalidad)
+
 
 EN CONSTRUCCIÓN...
 
@@ -124,3 +160,11 @@ Para saber más: [std::prelude][prelude].
 [enum-a]: https://book.rustlang-es.org/ch06-00-enums  "Enums y Pattern Matching"
 
 [prelude]: https://doc.rust-lang.org/std/prelude/index.html  "Module prelude"
+
+<a id="bib_crate1"></a>
+
+1. [¿Qué es crate en Rust?](https://localhorse.net/article/que-es-crate-en-rust#:~:text=Un%20crate%20en%20Rust%20es%20la%20unidad,dependencias%20y%20reutilizar%20código%20de%20forma%20eficiente.)
+
+<a id="bib_crate2"></a>
+
+2. [Paquetes y Crates](https://book.rustlang-es.org/ch07-01-packages-and-crates#paquetes-y-crates)
