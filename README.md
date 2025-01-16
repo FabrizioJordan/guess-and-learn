@@ -106,7 +106,141 @@ Una forma de tener las correciones de errores pero sin romper el código es no u
 Para saber más sobre todo esto, deberías leerlo en el libre gratuito y ofícial de Rust: [Aquí](https://book.rustlang-es.org/ch02-00-guessing-game-tutorial#usando-un-crate-para-obtener-más-funcionalidad)
 
 
-EN CONSTRUCCIÓN...
+Acá te dejo el código de la función ```segunda_adivinanza```:
+
+```
+use std::io;
+use rand::Rng;
+
+fn main() {
+    segunda_adivinanza();
+}
+
+fn segunda_adivinanza() {
+    println!("Adivina el número!");
+
+    let azar_numero = rand::thread_rng().gen_range(1..=100);
+
+    println!("El número al azar es: {azar_numero}");
+
+    println!("Por favor, escríbe el número: ");
+
+    let mut guess = String::new();
+
+    io::stdin()
+        .read_line(&mut guess)
+        .expect("No se pudo leer la línea");
+
+    println!("El número era: {guess}");
+}
+```
+
+Te explico el código:
+
+```use rand::Rng;``` acá se está llamando a la dependencia ```rand``` y a su trait llamado ```Rng```, ¿que es un trait?, un trait es algo que va a ayudar a nuestro compilador a entender nuevos tipos y sus métodos asociados, los cuales no vienen con Rust por defecto. Más sobre los traits [acá](https://book.rustlang-es.org/ch10-02-traits)
+
+Ahora vamos a la línea ```let azar_numero = rand::thread_rng().gen_range(1..=100);```.
+
+Lo que hace ```rand::thread_rng()``` es una función que nos permite generar los números aleatorios, y ```.gen_range(1..=100)``` es el método para generar los números con un rango específico. "gen range", osea generador de rangos sirve así; ```start..=end``` o ```inicio..=final``` pero usando los números que sirvan.
+
+Todo esto se guarda en la variable ```azar_numero```.
+
+Ya terminamos el segundo ejemplo, vamos con el tercero.
+
+
+## Tercer juego, uno más real
+
+Ahora vamos a no mostrar el número a adivinar, sino que vamos a verificar si el número que escribió el usuario es el mismo que el número a adivinar.
+
+Comencemos con el tercero ejemplo.
+
+```
+use std::io;
+use rand::Rng;
+use std::cmp::Ordering;
+
+fn main() {
+    primer_adivinanza();
+    segunda_adivinanza();
+    // tercer_adivinanza();
+}
+
+fn tercer_adivinanza(){
+    // este código no se ejecutará, está incompleto
+
+    println!("Elegiste el número: {guess}");
+
+    match guess.cmp(&num_secreto) {
+        Ordering::Greater => println!("Muy grande!"),
+        Ordering::Less => println!("Muy pequeño!"),
+        Ordering::Equal => println!("Ganaste! El número era: {} ", &num_secreto),
+    }
+}
+```
+
+Te dejo una explicación de la parte importante:
+
+```use std::cmp::Ordering;``` básicamente llama a la biblioteca estándar para que traiga ```Ordering``` (otro enum) desde ```cpm```, ```Ordering``` tiene tres variantes; ```greater```, ```less``` y ```equal```, que son los tres posibles resultados de una posible comparación númerica.
+
+Ahora ¿Que hace la siguiente línea?
+
+```
+match guess.cmp(&num_secreto) {
+    Ordering::Greater => println!("Muy grande!"),
+    Ordering::Less => println!("Muy pequeño!"),
+    Ordering::Equal => println!("Ganaste! El número era: {} ", &num_secreto),
+}
+```
+
+Cómo ya deberías saber, ```match``` es cómo un switch en JS, es un controlador de flujos que permite comparar un valor con patrones y ejecutar código ante una comparación exitosa.
+
+Entonces lo que se hace es básicamente;
+
+Se toma una referencia del número secreto y el número dentro de la variable ```guess```, los cuales se comparan entre sí gracias al método ```cmp```.
+
+Luego se devulve una variante del enum ```Ordering``` (p.e. ```less```) el cual se comparará con lo impuesto en nuestro ```match```, osea que se compara con ```guess```. 
+
+Hay que recordar que lo devuelto es una variante que nos dirá si el número adivinado es mayor, menor o igual que el número secreto.
+
+
+Terminada esta explicación, vamos a completar el código.
+
+```
+use std::io;
+use rand::Rng;
+use std::cmp::Ordering;
+
+fn main() {
+    tercer_adivinanza();
+}
+
+fn tercer_adivinanza(){
+    let num_secreto = rand::thread_rng().gen_range(1..=100);
+
+    println!("Por favor, escríbe el número: ");
+
+    let mut guess = String::new();
+
+    io::stdin()
+        .read_line(&mut guess)
+        .expect("No se pudo leer la línea");
+
+    let guess: u32 = guess.trim().parse().expect("Por favor, escríbe un número");
+    
+    println!("Elegiste el número: {guess}");
+    
+    match guess.cmp(&num_secreto) {
+        Ordering::Greater => println!("Muy grande!"),
+        Ordering::Less => println!("Muy pequeño!"),
+        Ordering::Equal => println!("Ganaste!"),
+    }
+    
+    println!("El número era: {} ", &num_secreto)
+}
+```
+
+Por fin nuestro adivinanza está completa.
+
 
 
 ## Más sobre lo visto
