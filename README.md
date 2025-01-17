@@ -1,18 +1,25 @@
 # guess-and-learn
 
+Todo este contenido está basado en el libro online oficial de Rust y en el curso de Microsoft
+
+y
+
+Mis modificaciones y mis gustos 
+
 
 ## Índice de contenidos
 
 * [Código inicial](#item_init)
+* [Segundo código](#item_second)
+* [Tercer código](#item_third)
 * [Sobre enum](#item_enum)
 * [Sobre usar o no ```expect```](#item_expect)
 * [Librería std](#item_std)
 
 
-
 <hr>
 
-## **Juego de adivinanzas en Rust, para además aprender.**
+## Juego de adivinanzas en Rust, para además aprender
 
 <br>
 
@@ -39,7 +46,8 @@ fn main() {
 
 Explicación del código (sólo las partes nuevas, no por ejemplo los ```println!```):
 
-1. ```use std::io;``` esta parte es fácil, sólo hay que recordar que ```std``` es la biblioteca "standard" de Rust, e ```io``` es la biblioteca de entrada y salida de dentro de "standard" (io = input output). Esta biblioteca sirve para que el usuario imprima y/o lea datos.
+1. ```use std::io;``` esta parte es fácil, sólo hay que recordar que ```std``` es la biblioteca "standard" de Rust, e ```io``` es la biblioteca de entrada y salida de dentro de "standard" (io = input output). 
+Esta biblioteca sirve para que el usuario imprima y/o lea datos.
 
 2. ```let mut adivina = String::new();``` se crea una variable "string" vacía pero mutable (```String::new``` crea una instancia de ```String```).
 
@@ -47,7 +55,8 @@ Explicación del código (sólo las partes nuevas, no por ejemplo los ```println
     Stdin es un tipo que representa un "manejador" de la entrada estandar para un terminal.
 
 4. Luego viene ```.read_line(&mut adivina)```, que es parte de ```stdin()```.
-    ```.read_line(&mut adivina)``` llama al método read_line (un "manejador" de entrada del usuario) y pasamos cómo parametro la variable (referencia de ella pero mutable) antes creada, esto es para decirle que cadena se debe almacenar lo que el usuario escriba.
+    
+    ```.read_line(&mut adivina)``` llama al método read_line (un "manejador" de entrada del usuario) y pasamos cómo parametro la variable ```adivina``` (referencia de ella, pero mutable) antes creada, esto es para decirle en la cadena que se debe almacenar lo que el usuario escriba.
 
     Osea que, lo que hace esta línea es: darle una cadena mutable a un método, el cual añadirá lo que escriba el usuario a esta cadena.
     
@@ -68,6 +77,8 @@ Esta explicación finalizó.
 
 
 ## Segundo juego, con números random
+
+<a id="item_second"></a>
 
 Este código va a ser parte de la función ```primer_adivinanza```.
 
@@ -149,6 +160,9 @@ Ya terminamos el segundo ejemplo, vamos con el tercero.
 
 
 ## Tercer juego, uno más real
+
+
+<a id="item_third"></a>
 
 Ahora vamos a no mostrar el número a adivinar, sino que vamos a verificar si el número que escribió el usuario es el mismo que el número a adivinar.
 
@@ -241,7 +255,15 @@ fn tercer_adivinanza(){
 
 Por fin nuestro adivinanza está completa.
 
+Acá te dejo algunas explicaciones:
 
+Línea ```let guess: u32 = guess.trim().parse().expect("Por favor, escríbe un número");``` :
+
+Primero se modifica una variable de tipo int sin signo y de 32 bits (hay que recordar que esta variable ya fue creada anteriormente, ahora está sufriendo una modificación en su valor, lo que se llama [*Shadowing*][var_shadow]).
+
+Luego se le asigna el dato de la variable antigua pero con modificaciones (```let guess: u32 = guess...```), ```.trim()``` le saca los espacios tanto iniciales como finales, luego ```.parse()``` lo convierte de un tipo "String" a un tipo ```u32```. Hay que recordar que para convertir de un tipo num a un tipo ```String``` la variable a convertir no puede tener ni espacios ni nada que no sea un número (a menos que el número sea con coma ...).
+
+Y por último viene ```.expect("Por favor...")``` el cual le dice al programa que luego de todas las modificaciones lo esperable es que el dato dentro de la variable sea un "int" y no un tipo ```String```, osea que la conversión haya sido exitosa.
 
 ## Más sobre lo visto
 
@@ -294,6 +316,8 @@ Para saber más: [std::prelude][prelude].
 [enum-a]: https://book.rustlang-es.org/ch06-00-enums  "Enums y Pattern Matching"
 
 [prelude]: https://doc.rust-lang.org/std/prelude/index.html  "Module prelude"
+
+[var_shadow]: https://book.rustlang-es.org/ch03-01-variables-and-mutability#shadowing "Shadowing"
 
 <a id="bib_crate1"></a>
 
