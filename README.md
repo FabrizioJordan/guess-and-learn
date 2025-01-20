@@ -12,7 +12,6 @@ Mis modificaciones y mis gustos
 * [Código inicial](#item_init)
 * [Segundo código](#item_second)
 * [Tercer código](#item_third)
-* [Sobre enum](#item_enum)
 * [Sobre usar o no ```expect```](#item_expect)
 * [Librería std](#item_std)
 
@@ -61,7 +60,7 @@ Esta biblioteca sirve para que el usuario imprima y/o lea datos.
     Osea que, lo que hace esta línea es: darle una cadena mutable a un método, el cual añadirá lo que escriba el usuario a esta cadena.
     
     Tanto la parte del "read line" cómo la siguiente son hablando de lógica, la misma línea (todo podría ir en la misma línea de código Rust, pero por simplicidad se separa en tres).
-    La línea de "read line" recibe un argumento, pero en este caso, también devuelve otro, y lo que devuelve es un [```enum```][enum-a] llamado ```Result``` (también puedes ver que es enum al final de este documento)
+    La línea de "read line" recibe un argumento, pero en este caso, también devuelve otro, y lo que devuelve es un [```enum```][enum] llamado ```Result``` (tengo una breve expliación de lo que es un enum [acá](https://github.com/FabrizioJordan/hello-cargo/tree/main?tab=readme-ov-file#loop-bucle-infinito))
 
     ```Result``` tiene dos posibles variantes ```Ok``` y ```Err``` (error).
     Esto es parecido a JS cuando se llama a una API, la llamada puede ser exitosa (```Ok```) o puede ser fallida (```Err```).
@@ -261,26 +260,89 @@ Línea ```let guess: u32 = guess.trim().parse().expect("Por favor, escríbe un n
 
 Primero se modifica una variable de tipo int sin signo y de 32 bits (hay que recordar que esta variable ya fue creada anteriormente, ahora está sufriendo una modificación en su valor, lo que se llama [*Shadowing*][var_shadow]).
 
-Luego se le asigna el dato de la variable antigua pero con modificaciones (```let guess: u32 = guess...```), ```.trim()``` le saca los espacios tanto iniciales como finales, luego ```.parse()``` lo convierte de un tipo "String" a un tipo ```u32```. Hay que recordar que para convertir de un tipo num a un tipo ```String``` la variable a convertir no puede tener ni espacios ni nada que no sea un número (a menos que el número sea con coma ...).
+Luego se le asigna el dato de la variable antigua pero con modificaciones (```let guess: u32 = guess...```), ```.trim()``` le saca los espacios tanto iniciales como finales, luego ```.parse()``` lo convierte de un tipo "String" a un tipo ```u32```. Hay que recordar que para convertir de un tipo num a un tipo ```String``` la variable a convertir no puede tener ni espacios ni nada que no sea un número (a menos que el número sea con coma, etc).
 
-Y por último viene ```.expect("Por favor...")``` el cual le dice al programa que luego de todas las modificaciones lo esperable es que el dato dentro de la variable sea un "int" y no un tipo ```String```, osea que la conversión haya sido exitosa.
+Y por último viene ```.expect("Por favor...")``` el cual le dice al programa que luego de todas las modificaciones lo esperable es que el dato dentro de la variable sea un "integer" y no un tipo ```String```, si no funciona entonces se debe parar el programa y mostrar al usuario el texto de dentro del ```expect```. 
 
-## Más sobre lo visto
+Básicamente ```.parse()``` devuelve lo mismo que ```Result```, o un ```Err``` o un ```Ok```, los cuales nos dicen si en este caso la conversión fue errónea o exitosa.
 
 
-<a id="item_enum"></a>
+Fín de este código, acá te dejo un último.
 
-#### Enum
+## Último juego, en bucle y entrada no válida
 
-Enum es un tipo que puede estar en uno de varios estados posibles. Llamamos a cada estado posible una variante.
+Primero vamos a añadirle un bucle:
 
-Ejemplo:
 ```
-enum TipoDeIp {
-    V4,
-    V6,
+use std::io;
+use rand::Rng;
+use std::cmp::Ordering;
+
+fn main() {
+    println!("\n");
+    println!("Bienvenido a este juego de adivinanza");
+    println!("\n");
+
+    ultima_adivinanza();
+}
+fn ultima_adivinanza(){
+
+    loop {
+        let num_secreto = rand::thread_rng().gen_range(1..=100);
+
+        println!("Por favor, escríbe el número: ");
+
+        let mut guess = String::new();
+
+        io::stdin()
+            .read_line(&mut guess)
+            .expect("No se pudo leer la línea");
+
+        let guess: u32 = guess.trim().parse().expect("Por favor, escríbe un número");
+        
+        println!("Elegiste el número: {guess}");
+
+        println!("\n");
+        
+        match guess.cmp(&num_secreto) {
+            Ordering::Greater => println!("Muy grande!"),
+            Ordering::Less => println!("Muy pequeño!"),
+            Ordering::Equal => println!("Ganaste!"),
+        }
+
+        println!("El número era: {} ", &num_secreto);
+    }
+
 }
 ```
+
+Este cambios es fácil, sólo se mete todo el contenido de la función en un ```loop```, ¿se podría haber hecho de otra forma? Sí, podríamos simplemente llamar desde la función ```main``` a la función ```ultima_adivinanza``` dentro de un loop, pero de esa forma el código no estaría implementado directamente desde la función, lo que ahora no nos sirve.
+
+Que es un ```loop``` lo aprendés [acá][what_is_loop] o te dejo [mi expliación con código][loop_by_me].
+
+Ahora le vamos a hacer una pequeña modificación a nuestro código, haremos que cuando el usuario acierte el número, el programa se cierre.
+
+Vamos a modificar solo nuestro ```match```:
+
+```
+match guess.cmp(&num_secreto) {
+    Ordering::Greater => println!("Muy grande!"),
+    Ordering::Less => println!("Muy pequeño!"),
+    Ordering::Equal => {
+        println!("Ganaste!");
+        println!("El número ganador fue: {} ", &num_secreto);
+        break;
+    }
+}
+```
+
+Ahora se dejó de solo tener un mensaje de ```Ganaste!```, ahora también se le compartirá el número ganador y espcecialmente se cerrará el programa con un ```break;```.
+
+Todo esto se encierra dentro de una función debido a que ahora se usará más de una línea.
+
+
+
+## Más sobre lo visto
 
 
 <a id="item_expect"></a>
@@ -313,11 +375,15 @@ Para saber más: [std::prelude][prelude].
 ## Bibliografía:
 
 
-[enum-a]: https://book.rustlang-es.org/ch06-00-enums  "Enums y Pattern Matching"
+[enum]: https://book.rustlang-es.org/ch06-00-enums  "Enums y Pattern Matching"
 
 [prelude]: https://doc.rust-lang.org/std/prelude/index.html  "Module prelude"
 
 [var_shadow]: https://book.rustlang-es.org/ch03-01-variables-and-mutability#shadowing "Shadowing"
+
+[what_is_loop]: https://doc.rust-lang.org/rust-by-example/flow_control/loop.html "loop"
+
+[loop_by_me]: https://github.com/FabrizioJordan/hello-cargo/tree/main?tab=readme-ov-file#loop-bucle-infinito "Loop: Bucle infinito."
 
 <a id="bib_crate1"></a>
 
