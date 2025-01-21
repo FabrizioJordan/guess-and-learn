@@ -126,6 +126,7 @@ fn ultima_adivinanza(){
 }
 */
 
+/*
 fn ultima_adivinanza(){
 
     loop {
@@ -156,6 +157,64 @@ fn ultima_adivinanza(){
         }
 
         println!("El número era: {} ", &num_secreto);
+
+    }
+   
+}
+*/
+
+
+fn ultima_adivinanza(){
+
+    loop {
+        let num_secreto = rand::thread_rng().gen_range(1..=100);
+
+        println!("Por favor, escríbe el número: ");
+
+        let mut guess = String::new();
+
+        io::stdin()
+            .read_line(&mut guess)
+            .expect("Error. No se pudo leer la línea")
+        ;
+
+        let guess = guess.trim();
+
+        let salir_opciones = ["salir", "quit", "Salir", "Quit"];
+        if salir_opciones.contains(&guess) {
+            println!("\n");
+            println!("Saliendo del juego...");
+            println!("\n");
+            break;
+        }
+
+        let guess: u32 = match guess.parse() {
+            Ok(num) => num,
+            Err(_) => {
+                println!("Error, número no válido.");
+                println!("Escríba un número válido.");
+                println!("\n");
+                continue;
+            },
+        };
+
+        println!("Elegiste el número: {guess}");
+
+        println!("\n");
+        
+        match guess.cmp(&num_secreto) {
+            Ordering::Greater => println!("Muy grande!"),
+            Ordering::Less => println!("Muy pequeño!"),
+            Ordering::Equal => {
+                println!("Ganaste!");
+                println!("El número era: {} ", &num_secreto);
+                println!("\n");
+                break;
+            }
+        }
+
+        println!("El número era: {} ", &num_secreto);
+        println!("\n");
 
     }
    

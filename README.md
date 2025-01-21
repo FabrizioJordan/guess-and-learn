@@ -341,6 +341,54 @@ Ahora se dejó de solo tener un mensaje de ```Ganaste!```, ahora también se le 
 Todo esto se encierra dentro de una función debido a que ahora se usará más de una línea.
 
 
+Ahora te voy a explicar el nuevo siguiente código:
+
+Este nuevo código nos va a permitir chequear si lo escrito por el usuario es válido.
+
+```
+//let guess: u32 = guess.trim().parse().expect("Por favor, escríbe un número");
+
+let guess: u32 = match guess.trim().parse() {
+    Ok(num) => num,
+    Err(_) => {
+        println!("Error número no válido.");
+        println!("Escríba un número válido.");
+        continue;
+    },
+};
+```
+
+El código comentado (el que empieza con ```//```) es el código que anteriormente usabamos.
+
+Ahora cambiamos ```expect``` por un ```match```.
+
+Esto es para poder manejar posibles errores existentes, cómo que el número escrito por el usuario no sea considerado válido por el programa para poder ser convertido a ```u32```, aunque también nos permitirá manejar cualquier error más allá de una conversión fallida.
+
+Cambiamos de ```expect``` a ```match``` para así no bloquear el programa entero, esto nos sirve debido a que es un programa en bucle.
+
+¿Porqué usamos ```Ok(num)``` y ```Err(_)```?
+
+Responder esto nos devulve para atrás, donde decíamos que ```.parse()``` devolvía ```Ok``` y ```Err```.
+
+En el caso exitoso de conversión tan solo hacemos ```Ok(num) => num``` para que el número que ```Ok``` nos devuelve sea pasado al siguiente método.
+
+Si la conversión falló entonces usaremos:
+
+```
+Err(_) => {
+    println!("Error número no válido.");
+    println!("Escríba un número válido.");
+    continue;
+}
+```
+
+```Err(_)``` nos dice que todo error se manejará con la función siguiente ```=> { ... }```.
+
+Se usa ```_``` dentro de ```Err``` para decirle al programa que todo error será manejado y no sólo un único caso.
+
+¿¿Porqué todo esa función y no solo un simple ```continue,```??
+
+Es simple, si queremos que el usuario sepa que está cometiendo un error entonces tenemos que hacerselo saber.
 
 ## Más sobre lo visto
 
